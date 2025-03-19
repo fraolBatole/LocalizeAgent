@@ -1,0 +1,23 @@
+[project]
+name = "localize_agent"
+version = "0.1.0"
+description = "localize_agent using crewAI"
+authors = [{ name = "Fraol Batole", email = "fraolahm@gmail.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[tools]>=0.108.0,<1.0.0"
+]
+
+[project.scripts]
+localize_agent = "localize_agent.main:run"
+run_crew = "localize_agent.main:run"
+train = "localize_agent.main:train"
+replay = "localize_agent.main:replay"
+test = "localize_agent.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"

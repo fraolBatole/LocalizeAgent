@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+import sys
+import warnings
+
+from datetime import datetime
+
+from localize_agent.crew import LocalizeAgent
+
+warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+
+# This main file is intended to be a way for you to run your
+# crew locally, so refrain from adding unnecessary logic into this file.
+# Replace with inputs you want to test with, it will automatically
+# interpolate any tasks and agents information
+
+def run():
+    """
+    Run the crew.
+    """
+    with open('/Users/fraolbatole/Documents/GitHub/LocalizeAgent/localize_agent/src/localize_agent/datasets/input.java', 'r') as f:
+        source_code = f.read()
+    
+    inputs = {
+        "code": source_code
+    }
+
+    try:
+        LocalizeAgent().crew().kickoff(inputs=inputs)
+    except Exception as e:
+        raise Exception(f"An error occurred while running the crew: {e}")
+
+
+def train():
+    """
+    Train the crew for a given number of iterations.
+    """
+    with open('input.java', 'r') as f:
+        source_code = f.read()
+    
+    inputs = {
+        "code": source_code
+    }
+    try:
+        LocalizeAgent().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+
+    except Exception as e:
+        raise Exception(f"An error occurred while training the crew: {e}")
+
+def replay():
+    """
+    Replay the crew execution from a specific task.
+    """
+    try:
+        LocalizeAgent().crew().replay(task_id=sys.argv[1])
+
+    except Exception as e:
+        raise Exception(f"An error occurred while replaying the crew: {e}")
+
+def test():
+    """
+    Test the crew execution and returns the results.
+    """
+    with open('input.java', 'r') as f:
+        source_code = f.read()
+    
+    inputs = {
+        "code": source_code
+    }
+    try:
+        LocalizeAgent().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
+
+    except Exception as e:
+        raise Exception(f"An error occurred while testing the crew: {e}")

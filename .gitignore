@@ -1,0 +1,17 @@
+# Ignore virtual environments
+venv/
+.env/
+.venv/
+LocalizeAgentEnv/
+
+# Ignore log files
+*.log
+
+# Ignore build output
+dist/
+build/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+__pycache__/

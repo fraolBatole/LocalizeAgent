@@ -6,6 +6,7 @@ LocalizeAgentEnv/
 
 # Ignore log files
 *.log
+*.md
 
 # Ignore build output
 dist/

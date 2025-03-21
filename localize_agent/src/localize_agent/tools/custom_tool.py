@@ -1,19 +1,22 @@
+import ast
 from crewai.tools import BaseTool
 from typing import Type
 from pydantic import BaseModel, Field
 
 
-class MyCustomToolInput(BaseModel):
-    """Input schema for MyCustomTool."""
-    argument: str = Field(..., description="Description of the argument.")
+class CountMethodsInput(BaseModel):
+    """Input for the CountMethods tool."""
+    source_code: str = Field(..., description="The source code to analyze.")
 
-class MyCustomTool(BaseTool):
-    name: str = "Name of my tool"
-    description: str = (
-        "Clear description for what this tool is useful for, your agent will need this information to use it."
-    )
-    args_schema: Type[BaseModel] = MyCustomToolInput
+class CountMethods(BaseTool):
+    name: str = "Count Methods in Source Code"
+    description: str = "Counts the number of methods in a given source code."
+    args_schema: Type[BaseModel] = CountMethodsInput
 
-    def _run(self, argument: str) -> str:
-        # Implementation goes here
-        return "this is an example of a tool output, ignore it and move along."
+    def _run(self, source_code: str) -> str:
+        try:
+            tree = ast.parse(source_code)
+            method_count = sum(1 for node in ast.walk(tree) if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)))
+            return f"The source code contains {method_count} methods."
+        except Exception as e:
+            return f"Error processing source code: {e}"

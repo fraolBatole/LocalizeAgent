@@ -1,16 +1,57 @@
-software_design_task:
+planning_task:
   description: >
-    Conduct a thorough design issue analysis about {code}
-    Make sure you find any interesting and relevant.
+    Develop a strategic plan for analyzing the provided code. The plan should detail how to instruct the design_issue_identification_agent to identify design issues and recommend refactoring, guide the code_analyzer_agent on which specific analyses to perform based on the identified issue, and coordinate with the prompt_engineering_agent to craft a clear prompt for the design_issue_localization_agent.
   expected_output: >
-    A list with 5 bullet points of the most relevant information about the design issues in {code}
-  agent: software_designer
+    A comprehensive plan outlining the analysis steps, delegated responsibilities among agents, and the expected outcomes for design issue identification, targeted code analysis, prompt crafting, and issue localization.
+  agent: planning_agent
 
-reporting_task:
+design_issue_identification_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Conduct an initial review of the code to identify design issues from the following categories: "modularity", "complexity", and "information hiding". Suggest an appropriate refactoring type based on the identified issue(s), selected from "move method", "parameterize variable", "inline variable", or "inline method". The output must be structured and easily parsable for subsequent tasks.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A JSON object with two keys:
+    - "design_issues": an array of one or more design issue types, each being one of "modularity", "complexity", or "information hiding".
+    - "refactoring": a string that is exactly one of "move method", "parameterize variable", "inline variable", or "inline method".
+    Do not include any extra data.
+  agent: design_issue_identification_agent
+
+code_analysis_task:
+  description: >
+    Using the planning instructions and the output from the design_issue_identification_agent (which provides the identified design issues and the corresponding refactoring recommendation), perform a targeted analysis of the provided code. Your analysis should focus on relevant metrics such as fan-in/fan-out, method call dependencies, variable usage, and class coupling. Clearly correlate these metrics with the identified design issue and the suggested refactoring type to assess the impact on the code. The instructions are designed to be clear, unambiguous, and robust to guide subsequent refactoring efforts.
+  expected_output: >
+    A comprehensive and structured analysis report that includes:
+      - Quantitative metrics (e.g., fan-in, fan-out, dependency counts) relevant to the design issue.
+      - Qualitative commentary on how these metrics reflect the impact of the identified design issue.
+      - A clear explanation linking the analysis results with the recommended refactoring type.
+  agent: code_analyzer_agent
+
+prompt_engineering_task:
+  description: >
+    Based on the outputs from the design issue identification and code analysis tasks, create a clear and actionable prompt for the design_issue_localization_agent. Use the answer from the code_analysis_task/agent to get the recommended refactoring type, design issue type, and analysis summary. Your task is to construct a dictionary called "prompt" with three keys:
+      - "query": A clear question asking which class, function, or variable should be refactored using [refactoring type] to resolve the identified design issue [design_issues]. The query should not contain a class name, but rather puts it as a question.
+      - "code_snippet": the whole input code {code}.
+      - "analysis_summary": A concise summary of the code analysis findings, including key metrics and their relation to the identified design issue and refactoring recommendation. This summary should be detailed enough to guide the localization agent but avoid unnecessary verbosity.
+    The instructions must be explicit, unambiguous, and robust to guide the localization process accurately.
+  expected_output: >
+    A dictionary named "prompt" structured as follows:
+    {
+      "query": "Which class, function, or variable should be refactored to address the identified design issue?",
+      "code_snippet": {code},
+      "analysis_summary": "A summary of the code analysis findings, including key metrics and their relation to the identified design issue and refactoring recommendation."
+    }
+  agent: prompt_engineering_agent
+
+design_issue_localization_task:
+  description: >
+    Utilize the prompt provided by the prompt_engineering_task to identify the specific locations in the code that require refactoring. Analyze the "prompt" dictionary, follow its instructions, and determine the class and method (or variable, if applicable) that need to be refactored. If there are multiple functions or locations to refactor, generate a separate JSON/dict for each. The output must be formatted as a list of JSON/dict objects, where each object contains exactly the following keys: "Class name", "Function name", "Function signature", "refactoring_type", and "rationale". This output should instruct the developer on where to apply the refactoring.
+  expected_output: >
+    A list of JSON/dict objects, each formatted exactly as follows:
+    {
+      "Class name": "Identified class name",
+      "Function name": "Identified function name",
+      "Function signature": "Identified function signature",
+      "refactoring_type": "One of move method, parameterize variable, inline variable, or inline method",
+      "rationale": "Brief explanation of why this location needs refactoring"
+    }
+    Do not include any extra information.
+  agent: design_issue_localization_agent

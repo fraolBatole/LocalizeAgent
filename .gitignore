@@ -2,6 +2,7 @@
 venv/
 .env/
 .venv/
+localize_agent/.env
 LocalizeAgentEnv/
 
 # Ignore log files

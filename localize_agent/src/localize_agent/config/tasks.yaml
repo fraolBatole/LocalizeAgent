@@ -1,8 +1,28 @@
 planning_task:
   description: >
-    Develop a strategic plan for analyzing the provided code. The plan should detail how to instruct the design_issue_identification_agent to identify design issues and recommend refactoring, guide the code_analyzer_agent on which specific analyses to perform based on the identified issue, and coordinate with the prompt_engineering_agent to craft a clear prompt for the design_issue_localization_agent.
+    Create a brief, step-by-step analysis plan that includes:
+    1. Design Issue Identification Phase:
+       - Specify which code elements to analyze (classes, methods, dependencies)
+       - Define criteria for identifying modularity, complexity, and information hiding issues
+       - List specific metrics to measure (e.g., coupling, cohesion)
+    
+    2. Code Analysis Phase:
+       - Specify dependencies and relationships to examine
+    
+    3. Prompt Engineering Phase:
+       - Outline key elements to include in the analysis summary
+       - Define criteria for selecting code sections to refactor
+    
+    4. Issue Localization Phase:
+       - Define priority criteria for selecting refactoring targets
+       - Specify validation checks for proposed refactorings
+
+    5. Ranking Phase:
+       - Define criteria for ranking refactoring suggestions based on impact and feasibility
+  
   expected_output: >
-    A comprehensive plan outlining the analysis steps, delegated responsibilities among agents, and the expected outcomes for design issue identification, targeted code analysis, prompt crafting, and issue localization.
+    A structured analysis plan document containing: Issue Identification Strategy, Analysis Execution Plan, Prompt Construction Guidelines, Localization Criteria, and Ranking Strategy. Each section should be clearly defined and actionable.:
+
   agent: planning_agent
 
 design_issue_identification_task:
@@ -17,10 +37,15 @@ design_issue_identification_task:
 
 code_analysis_task:
   description: >
-    Using the planning instructions and the output from the design_issue_identification_agent (which provides the identified design issues and the corresponding refactoring recommendation), perform a targeted analysis of the provided code. Your analysis should focus on relevant metrics such as fan-in/fan-out, method call dependencies, variable usage, and class coupling. Clearly correlate these metrics with the identified design issue and the suggested refactoring type to assess the impact on the code. The instructions are designed to be clear, unambiguous, and robust to guide subsequent refactoring efforts.
+    Using the planning instructions and the output from the design_issue_identification_agent (which provides the identified design issues and the corresponding refactoring recommendation), perform a targeted analysis of the provided code. Focus on relevant metrics such as fan-in/fan-out, method call dependencies, variable usage, and class coupling. Use the CountMethods tool to determine the number of methods and the VariableUsage tool to analyze variable usage. 
+
+    The first output should provide reasoning over the results from these tools, explaining how the metrics relate to the identified design issue and the suggested refactoring type. Clearly correlate these metrics with the design issue to assess the impact on the code. The instructions are designed to be explicit, unambiguous, and robust to guide subsequent refactoring efforts.
+
   expected_output: >
     A comprehensive and structured analysis report that includes:
+      - Reasoning over the tool outputs, explaining their relevance to the identified design issue.
       - Quantitative metrics (e.g., fan-in, fan-out, dependency counts) relevant to the design issue.
+      - The number of methods within the project based on the CountMethods tool.
       - Qualitative commentary on how these metrics reflect the impact of the identified design issue.
       - A clear explanation linking the analysis results with the recommended refactoring type.
   agent: code_analyzer_agent
@@ -55,3 +80,19 @@ design_issue_localization_task:
     }
     Do not include any extra information.
   agent: design_issue_localization_agent
+
+ranking_task:
+  description: >
+    Rank the outputs from the design_issue_localization_agent based on their importance. The ranking should consider the analysis results and the recommended refactoring type. Each output should include an additional key called "rank" that assigns a rank to the item. Start ranking them from 1.
+  expected_output: >
+    A list of JSON/dict objects, each formatted exactly as follows:
+    {
+      "Class name": "Identified class name",
+      "Function name": "Identified function name",
+      "Function signature": "Identified function signature",
+      "refactoring_type": "One of move method, parameterize variable, inline variable, or inline method",
+      "rationale": "Brief explanation of why this location needs refactoring",
+      "rank": "An integer representing the rank of this item"
+    }
+    The rank should be assigned based on the importance of the refactoring target.
+  agent: ranking_agent

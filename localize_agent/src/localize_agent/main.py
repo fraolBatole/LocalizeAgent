@@ -1,23 +1,37 @@
 #!/usr/bin/env python
 import sys
 import warnings
-
-from datetime import datetime
-
+import os
 from localize_agent.crew import LocalizeAgent
+
+os.environ["OTEL_SDK_DISABLED"] = "true"
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
-# This main file is intended to be a way for you to run your
-# crew locally, so refrain from adding unnecessary logic into this file.
-# Replace with inputs you want to test with, it will automatically
-# interpolate any tasks and agents information
+def get_file_path(default_path=None):
+    """
+    Prompt user for file path or use the provided default.
+    """
+    if default_path and os.path.exists(default_path):
+        use_default = input(f"Use default file path ({default_path})? (y/n): ").lower() == 'y'
+        if use_default:
+            return default_path
+    
+    while True:
+        file_path = input("Enter the path to your source code file: ")
+        if os.path.exists(file_path):
+            return file_path
+        else:
+            print(f"File not found: {file_path}")
 
 def run():
     """
     Run the crew.
     """
-    with open('/Users/fraolbatole/Documents/GitHub/LocalizeAgent/localize_agent/src/localize_agent/datasets/input.java', 'r') as f:
+    default_path = '/Users/fraolbatole/Documents/GitHub/LocalizeAgent/localize_agent/src/localize_agent/datasets/test_input.java'
+    file_path = get_file_path(default_path)
+    
+    with open(file_path, 'r') as f:
         source_code = f.read()
     
     inputs = {
@@ -34,7 +48,9 @@ def train():
     """
     Train the crew for a given number of iterations.
     """
-    with open('input.java', 'r') as f:
+    file_path = get_file_path()
+    
+    with open(file_path, 'r') as f:
         source_code = f.read()
     
     inputs = {
@@ -60,7 +76,9 @@ def test():
     """
     Test the crew execution and returns the results.
     """
-    with open('input.java', 'r') as f:
+    file_path = get_file_path()
+    
+    with open(file_path, 'r') as f:
         source_code = f.read()
     
     inputs = {

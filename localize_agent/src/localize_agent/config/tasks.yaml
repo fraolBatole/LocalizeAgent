@@ -27,7 +27,7 @@ planning_task:
 
 design_issue_identification_task:
   description: >
-    Conduct an initial review of the code to identify design issues from the following categories: "modularity", "complexity", and "information hiding". Suggest an appropriate refactoring type based on the identified issue(s), selected from "move method", "parameterize variable", "inline variable", or "inline method". The output must be structured and easily parsable for subsequent tasks.
+    Conduct an initial review of the code to identify design issues from the following categories: "modularity", "complexity", and "information hiding". Use the precomputed PMD summary {pmd_summary} and structured evidence {evidence_json} when present. Do NOT call external tools. Suggest an appropriate refactoring type based on the identified issue(s), selected from "move method", "parameterize variable", "inline variable", or "inline method". The output must be structured and easily parsable for subsequent tasks.
   expected_output: >
     A JSON object with two keys:
     - "design_issues": an array of one or more design issue types, each being one of "modularity", "complexity", or "information hiding".
@@ -37,15 +37,20 @@ design_issue_identification_task:
 
 code_analysis_task:
   description: >
-    Using the planning instructions and the output from the design_issue_identification_agent (which provides the identified design issues and the corresponding refactoring recommendation), perform a targeted analysis of the provided code. Focus on relevant metrics such as fan-in/fan-out, method call dependencies, variable usage, and class coupling. Use the CountMethods tool to determine the number of methods and the VariableUsage tool to analyze variable usage. 
+    Using the planning instructions and the output from the design_issue_identification_agent (which provides the identified design issues and the corresponding refactoring recommendation), perform a targeted analysis of the provided code.
 
-    The first output should provide reasoning over the results from these tools, explaining how the metrics relate to the identified design issue and the suggested refactoring type. Clearly correlate these metrics with the design issue to assess the impact on the code. The instructions are designed to be explicit, unambiguous, and robust to guide subsequent refactoring efforts.
+    IMPORTANT: Do NOT call external tools. All PMD and Tree-sitter results are already precomputed below. Use ONLY:
+    - {evidence} (human-readable evidence summary)
+    - {pmd_summary} (PMD rule listing)
+    - {evidence_json} (structured JSON with pmd_findings, code_facts, correlated_findings, metrics)
+
+    Reason over the precomputed fan-in/fan-out, method counts, parameters, class coupling, and PMD design-rule findings. Explain how these metrics relate to the identified design issue and the suggested refactoring type.
 
   expected_output: >
     A comprehensive and structured analysis report that includes:
       - Reasoning over the tool outputs, explaining their relevance to the identified design issue.
       - Quantitative metrics (e.g., fan-in, fan-out, dependency counts) relevant to the design issue.
-      - The number of methods within the project based on the CountMethods tool.
+      - The number of methods from the precomputed code_facts in evidence_json.
       - Qualitative commentary on how these metrics reflect the impact of the identified design issue.
       - A clear explanation linking the analysis results with the recommended refactoring type.
   agent: code_analyzer_agent

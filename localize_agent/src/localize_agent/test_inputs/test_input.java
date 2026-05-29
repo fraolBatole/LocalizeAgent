@@ -1,8 +1,7 @@
+package localize_agent.test_inputs;
+
 import java.util.ArrayList;
 import java.util.List;
-
-package localize_agent.datasets;
-
 
 public class InputProcessor {
 

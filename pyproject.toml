@@ -1,9 +1,23 @@
 [project]
-name = "localize-agent"
+name = "localize-design"
 version = "1.0.0"
-description = "CLI to localize Java design issues using PMD, Tree-sitter, and LangGraph"
+description = "CLI to localize Java design issues using PMD, Tree-sitter, and LangGraph agents"
+readme = "README.md"
+license = { text = "MIT" }
 authors = [{ name = "Fraol Batole", email = "fraolahm@gmail.com" }]
 requires-python = ">=3.10,<3.13"
+keywords = ["java", "design", "refactoring", "pmd", "static-analysis", "langgraph"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = [
     "langgraph>=0.2.0,<0.4.0",
     "langchain-openai>=0.1.0,<0.4.0",
@@ -14,14 +28,24 @@ dependencies = [
     "pydantic>=2.0,<3.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/fraolBatole/LocalizeAgent"
+Repository = "https://github.com/fraolBatole/LocalizeAgent"
+Issues = "https://github.com/fraolBatole/LocalizeAgent/issues"
+
 [project.optional-dependencies]
 dev = ["pytest>=8.0,<9.0"]
 
 [dependency-groups]
-dev = ["pytest>=8.0,<9.0"]
+dev = [
+    "pytest>=8.0,<9.0",
+    "build>=1.0.0",
+    "twine>=5.0.0",
+]
 
 [project.scripts]
-localize-agent = "cli:main"
+localize-design = "cli:main"
+ldesign = "cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -32,6 +56,9 @@ only-include = ["src"]
 
 [tool.hatch.build.targets.wheel.sources]
 "src" = ""
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "README.md", "LICENSE"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

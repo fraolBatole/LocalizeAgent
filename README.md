@@ -1,15 +1,24 @@
-# LocalizeAgent
+# localize-design
 
 CLI to localize Java design issues using **PMD**, **Tree-sitter**, and autonomous **LangGraph** agents.
 
-## Setup
+## Install
+
+From [PyPI](https://pypi.org/project/localize-design/):
 
 ```bash
-uv sync
-brew install pmd   # optional but recommended
+pip install localize-design
+# or
+uv pip install localize-design
 ```
 
-Add `.env` in the repo root:
+You also need **PMD** on your PATH for full analysis (optional but recommended):
+
+```bash
+brew install pmd
+```
+
+Set your OpenAI API key:
 
 ```env
 OPENAI_API_KEY=...
@@ -20,13 +29,32 @@ MODEL=gpt-4o-mini
 
 ```bash
 # Run LangGraph agents — produces a ranked refactoring report
-uv run localize-agent --file path/to/File.java
+localize-design --file path/to/File.java
+
+# Shorthand alias
+ldesign --file path/to/File.java
 
 # Save output as JSON
-uv run localize-agent --file tests/fixtures/test_input2.java --format json -o report.json
+localize-design --file path/to/File.java --format json -o report.json
 
 # Text report to stdout
-uv run localize-agent --file path/to/File.java --format text
+localize-design --file path/to/File.java --format text
+```
+
+## Development
+
+```bash
+git clone https://github.com/fraolBatole/LocalizeAgent.git
+cd LocalizeAgent
+uv sync
+```
+
+Add `.env` in the repo root with your `OPENAI_API_KEY`.
+
+Run from source:
+
+```bash
+uv run localize-design --file tests/fixtures/test_input2.java
 ```
 
 ## How it works
@@ -54,4 +82,13 @@ tests/
 
 ```bash
 uv run pytest
+```
+
+## Publish to PyPI
+
+Maintainers only:
+
+```bash
+uv build
+uv publish
 ```

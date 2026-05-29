@@ -54,7 +54,7 @@ class PmdAnalyzer:
     ) -> list[PmdFinding]:
         """Analyze in-memory source by writing to a temp file."""
         self.ensure_available()
-        with tempfile.TemporaryDirectory(prefix="localize_agent_pmd_") as tmp:
+        with tempfile.TemporaryDirectory(prefix="localize_design_pmd_") as tmp:
             java_file = Path(tmp) / file_name
             java_file.write_text(source_code, encoding="utf-8")
             return self._run_pmd_on_file(java_file)

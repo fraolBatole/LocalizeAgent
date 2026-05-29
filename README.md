@@ -1,18 +1,42 @@
-To execute LocalizeAgent:
+# LocalizeAgent
 
-1.  Install CrewAI: `pip install crewai`
-2.  Navigate to the LocalizeAgent directory: `cd localize_agent`
-3.  Create a `.env` file and add your model and API key:
+CLI to localize Java design issues using **PMD**, **Tree-sitter**, and optional **CrewAI**.
 
-    ```
-    MODEL="your_model_name"
-    MODEL_NAME_API_KEY="your_api_key"
-    ```
+## Setup
 
-    e.g.,
+```bash
+cd localize_agent
+uv sync
+brew install pmd   # optional but recommended
+```
 
-    ```
-    MODEL=gemini/gemini-1.5-flash
-    GEMINI_API_KEY="your_gemini_api_key"
-    ```
-4.  Run the agent: `crewai run`
+Add `.env` in the repo root:
+
+```env
+OPENAI_API_KEY=...
+MODEL=gpt-4o-mini
+```
+
+`litellm.drop_params` is enabled automatically so newer OpenAI models work without extra config.
+
+## CLI
+
+```bash
+# Preflight (~1s)
+uv run localize-agent check --file src/localize_agent/test_inputs/test_input2.java
+
+# Evidence only
+uv run localize-agent analyze --file src/localize_agent/test_inputs/test_input2.java
+
+# Full pipeline without LLM
+uv run localize-agent localize --file src/localize_agent/test_inputs/test_input2.java --no-crew
+
+# With CrewAI (~2–3 min)
+uv run localize-agent localize --file src/localize_agent/test_inputs/test_input2.java
+```
+
+## Tests
+
+```bash
+cd localize_agent && uv run pytest
+```

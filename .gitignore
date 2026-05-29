@@ -1,9 +1,15 @@
 # Ignore virtual environments
 venv/
-.env/
 .venv/
-localize_agent/.env
 LocalizeAgentEnv/
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+.vscode/
+.cursor/
 
 # Ignore log files
 *.log

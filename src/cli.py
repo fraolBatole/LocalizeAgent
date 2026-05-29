@@ -31,7 +31,7 @@ def main(argv: list[str] | None = None) -> int:
 
     source = file_path.read_text(encoding="utf-8")
 
-    print("Starting LangGraph localization...", file=sys.stderr, flush=True)
+    print("Starting Design Issue localization...", file=sys.stderr, flush=True)
     state = build_graph().invoke(initial_state(file_path=str(file_path), source_code=source))
     print("Done.", file=sys.stderr, flush=True)
 

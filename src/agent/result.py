@@ -52,7 +52,6 @@ def state_to_result(state: AnalysisState) -> LocalizationResult:
         refactoring=state.get("refactoring_type"),
         targets=targets,
         raw_llm_output=state.get("raw_llm_output"),
-        reports={"final_report.md": state["final_report"]} if state.get("final_report") else {},
     )
 
 

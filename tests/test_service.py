@@ -22,4 +22,4 @@ def test_state_to_result_with_issues():
     result = state_to_result(state)
     assert result.design_issues == ["modularity", "complexity"]
     assert result.refactoring == "move method"
-    assert "final_report.md" in result.reports
+    assert result.evidence.evidence_text == "## Report\nMove the method."

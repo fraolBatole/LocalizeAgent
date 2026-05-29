@@ -176,7 +176,7 @@ class LocalizationResult(BaseModel):
     design_issues: list[str] = Field(default_factory=list)
     refactoring: str | None = None
     targets: list[RefactoringTarget] = Field(default_factory=list)
-    raw_crew_output: str | None = None
+    raw_llm_output: str | None = None
     reports: dict[str, str] = Field(default_factory=dict)
 
     def to_json_dict(self) -> dict[str, Any]:

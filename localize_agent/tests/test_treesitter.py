@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from localize_agent.analyzers.treesitter_java import JavaTreeSitterAnalyzer
-from localize_agent.pipeline import collect_evidence_from_path
+from localize_agent.tools.code_analysis import merge_fan_metrics_into_code_facts, run_structural_analysis
 
 SAMPLE = Path(__file__).resolve().parents[1] / "src/localize_agent/test_inputs/test_input.java"
 
@@ -14,9 +14,10 @@ def test_analyze_test_input_file():
 
 
 def test_method_fan_metrics_present():
-    evidence = collect_evidence_from_path(SAMPLE, run_pmd=False)
-    processor = next(
-        c for c in evidence.code_facts.classes if c.name == "InputProcessor"
-    )
+    source = SAMPLE.read_text(encoding="utf-8")
+    code_facts = JavaTreeSitterAnalyzer().analyze_file(SAMPLE)
+    structural = run_structural_analysis(source, file_path=str(SAMPLE))
+    code_facts = merge_fan_metrics_into_code_facts(code_facts, structural)
+    processor = next(c for c in code_facts.classes if c.name == "InputProcessor")
     assert len(processor.methods) >= 5
     assert any(m.fan_out is not None for m in processor.methods)

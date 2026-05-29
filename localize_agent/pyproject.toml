@@ -1,11 +1,14 @@
 [project]
 name = "localize_agent"
 version = "0.3.0"
-description = "CLI to localize Java design issues using PMD, Tree-sitter, and CrewAI"
+description = "CLI to localize Java design issues using PMD, Tree-sitter, and LangGraph"
 authors = [{ name = "Fraol Batole", email = "fraolahm@gmail.com" }]
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "crewai[tools]>=0.108.0,<1.0.0",
+    "langgraph>=0.2.0,<0.4.0",
+    "langchain-openai>=0.1.0,<0.4.0",
+    "langchain-core>=0.2.0,<0.4.0",
+    "python-dotenv>=1.0.0,<2.0.0",
     "tree-sitter>=0.22.0,<0.26.0",
     "tree-sitter-java>=0.23.0,<0.24.0",
     "pydantic>=2.0,<3.0",
@@ -26,9 +29,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/localize_agent"]
-
-[tool.crewai]
-type = "crew"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

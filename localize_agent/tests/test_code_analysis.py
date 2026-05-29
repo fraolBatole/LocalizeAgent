@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from localize_agent.pipeline import collect_evidence_from_path
-from localize_agent.tools.code_analysis import run_structural_analysis
+from localize_agent.analyzers.correlator import build_analysis_evidence
+from localize_agent.analyzers.treesitter_java import JavaTreeSitterAnalyzer
+from localize_agent.tools.code_analysis import merge_fan_metrics_into_code_facts, run_structural_analysis
 
 SAMPLE = Path(__file__).resolve().parents[1] / "src/localize_agent/test_inputs/test_input.java"
 
@@ -39,13 +40,23 @@ def test_class_coupling_acc():
     assert coupling.coupling_degree >= 1
 
 
-def test_pipeline_includes_structural_analysis():
-    evidence = collect_evidence_from_path(SAMPLE, run_pmd=False)
+def test_structural_analysis_merged_into_code_facts():
+    source = SAMPLE.read_text(encoding="utf-8")
+    code_facts = JavaTreeSitterAnalyzer().analyze_file(SAMPLE)
+    structural = run_structural_analysis(source, file_path=str(SAMPLE))
+    code_facts = merge_fan_metrics_into_code_facts(code_facts, structural)
+    evidence = build_analysis_evidence(
+        language="java",
+        file_path=str(SAMPLE),
+        project_path=None,
+        source_code=source,
+        pmd_findings=[],
+        code_facts=code_facts,
+        structural_analysis=structural,
+    )
     assert evidence.structural_analysis is not None
     assert evidence.structural_analysis.fan_metrics
     assert "Fan-in / Fan-out" in (evidence.evidence_text or "")
-    processor = next(
-        c for c in evidence.code_facts.classes if c.name == "InputProcessor"
-    )
+    processor = next(c for c in evidence.code_facts.classes if c.name == "InputProcessor")
     process_input = next(m for m in processor.methods if m.name == "processInput")
     assert process_input.fan_in is not None and process_input.fan_in >= 1

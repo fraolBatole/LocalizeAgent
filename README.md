@@ -1,6 +1,6 @@
 # LocalizeAgent
 
-CLI to localize Java design issues using **PMD**, **Tree-sitter**, and optional **CrewAI**.
+CLI to localize Java design issues using **PMD**, **Tree-sitter**, and autonomous **LangGraph** agents.
 
 ## Setup
 
@@ -17,23 +17,26 @@ OPENAI_API_KEY=...
 MODEL=gpt-4o-mini
 ```
 
-`litellm.drop_params` is enabled automatically so newer OpenAI models work without extra config.
-
-## CLI
+## Usage
 
 ```bash
-# Preflight (~1s)
-uv run localize-agent check --file src/localize_agent/test_inputs/test_input2.java
+# Run LangGraph agents — produces a ranked refactoring report
+uv run localize-agent --file path/to/File.java
 
-# Evidence only
-uv run localize-agent analyze --file src/localize_agent/test_inputs/test_input2.java
+# Save output as JSON
+uv run localize-agent --file src/localize_agent/test_inputs/test_input2.java --format json -o report.json
 
-# Full pipeline without LLM
-uv run localize-agent localize --file src/localize_agent/test_inputs/test_input2.java --no-crew
-
-# With CrewAI (~2–3 min)
-uv run localize-agent localize --file src/localize_agent/test_inputs/test_input2.java
+# Text report to stdout
+uv run localize-agent --file path/to/File.java --format text
 ```
+
+## How it works
+
+Three autonomous agents run in sequence, each calling tools as needed:
+
+1. **Evidence collector** — calls `run_pmd`, `run_treesitter`, `run_structural_metrics`, `correlate_evidence`
+2. **Issue localizer** — inspects correlated findings, identifies design issues and refactoring targets
+3. **Ranker** — ranks targets by impact, produces a final markdown report
 
 ## Tests
 

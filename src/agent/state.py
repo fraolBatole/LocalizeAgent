@@ -6,7 +6,7 @@ from typing import TypedDict
 
 from pydantic import BaseModel, Field
 
-from localize_agent.models import RefactoringTarget
+from models import RefactoringTarget
 
 
 class AnalysisState(TypedDict, total=False):

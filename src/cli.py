@@ -7,8 +7,9 @@ import json
 import sys
 from pathlib import Path
 
-from localize_agent.graph import build_graph, state_to_result
-from localize_agent.graph.state import initial_state
+from agent.result import state_to_result
+from agent.state import initial_state
+from agent.workflow import build_graph
 
 
 def main(argv: list[str] | None = None) -> int:

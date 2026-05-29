@@ -10,7 +10,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from localize_agent.models import PMD_DESIGN_RULES, PmdFinding
+from models import PMD_DESIGN_RULES, PmdFinding
 
 _RULESET_NAME = "pmd_design_ruleset.xml"
 

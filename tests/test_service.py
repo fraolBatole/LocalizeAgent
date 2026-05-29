@@ -1,11 +1,9 @@
-"""Tests for state_to_result: verifies graph state converts to a valid LocalizationResult."""
-
 from pathlib import Path
 
-from localize_agent.graph import state_to_result
-from localize_agent.graph.state import initial_state
+from agent.result import state_to_result
+from agent.state import initial_state
 
-SAMPLE = Path(__file__).resolve().parents[1] / "src/localize_agent/test_inputs/test_input.java"
+SAMPLE = Path(__file__).resolve().parent / "fixtures/test_input.java"
 
 
 def test_state_to_result_empty_state():

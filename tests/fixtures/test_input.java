@@ -1,5 +1,3 @@
-package localize_agent.test_inputs;
-
 import java.util.ArrayList;
 import java.util.List;
 

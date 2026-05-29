@@ -1,5 +1,5 @@
-from localize_agent.analyzers.correlator import correlate_evidence, format_evidence_text
-from localize_agent.models import ClassFact, CodeFact, MethodFact, PmdFinding
+from utils.correlator import correlate_evidence, format_evidence_text
+from models import ClassFact, CodeFact, MethodFact, PmdFinding
 
 
 def test_correlate_finding_to_class_by_line():

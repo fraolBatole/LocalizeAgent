@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from langgraph.graph import END, START, StateGraph
 
-from localize_agent.graph.nodes import (
+from agent.nodes import (
     evidence_collector_node,
     issue_localizer_node,
     ranker_node,
 )
-from localize_agent.graph.state import AnalysisState
+from agent.state import AnalysisState
 
 
 def build_graph():

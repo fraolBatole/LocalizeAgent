@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from localize_agent.graph.state import AnalysisState
-from localize_agent.models import (
+from agent.state import AnalysisState
+from models import (
     AnalysisEvidence,
     ClassFact,
     CodeFact,

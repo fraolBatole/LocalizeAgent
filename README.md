@@ -5,7 +5,6 @@ CLI to localize Java design issues using **PMD**, **Tree-sitter**, and autonomou
 ## Setup
 
 ```bash
-cd localize_agent
 uv sync
 brew install pmd   # optional but recommended
 ```
@@ -24,7 +23,7 @@ MODEL=gpt-4o-mini
 uv run localize-agent --file path/to/File.java
 
 # Save output as JSON
-uv run localize-agent --file src/localize_agent/test_inputs/test_input2.java --format json -o report.json
+uv run localize-agent --file tests/fixtures/test_input2.java --format json -o report.json
 
 # Text report to stdout
 uv run localize-agent --file path/to/File.java --format text
@@ -38,8 +37,21 @@ Three autonomous agents run in sequence, each calling tools as needed:
 2. **Issue localizer** — inspects correlated findings, identifies design issues and refactoring targets
 3. **Ranker** — ranks targets by impact, produces a final markdown report
 
+## Project layout
+
+```
+src/
+  cli.py              entry point
+  models.py           Pydantic types
+  config/             PMD ruleset
+  utils/              static analysis (pmd, treesitter, structural, correlator)
+  agent/              LangGraph workflow, nodes, LLM tools
+tests/
+  fixtures/           sample Java files
+```
+
 ## Tests
 
 ```bash
-cd localize_agent && uv run pytest
+uv run pytest
 ```

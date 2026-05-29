@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from localize_agent.models import (
+from models import (
     CallRelationship,
     ClassCoupling,
     ClassVariableUsage,

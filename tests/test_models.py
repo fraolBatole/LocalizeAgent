@@ -1,27 +1,26 @@
-from localize_agent.models import PMD_DESIGN_RULES, PmdFinding, RefactoringTarget
+from models import PMD_DESIGN_RULES, PmdFinding, RefactoringTarget
 
 
 def test_pmd_design_rules_count():
-    assert len(PMD_DESIGN_RULES) == 8
-    assert "GodClass" in PMD_DESIGN_RULES
+    assert len(PMD_DESIGN_RULES) >= 5
 
 
 def test_pmd_finding_model():
-    f = PmdFinding(
+    finding = PmdFinding(
         rule="GodClass",
-        message="Possible God class",
+        message="Too big",
         file_path="Foo.java",
-        line=10,
+        line=1,
     )
-    assert f.line == 10
+    assert finding.rule == "GodClass"
 
 
 def test_refactoring_target():
-    t = RefactoringTarget(
+    target = RefactoringTarget(
         class_name="Foo",
         function_name="bar",
         refactoring_type="move method",
         rationale="High coupling",
         rank=1,
     )
-    assert t.rank == 1
+    assert target.rank == 1

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from localize_agent.models import ClassFact, CodeFact, MethodFact
+from models import ClassFact, CodeFact, MethodFact
 
 try:
     import tree_sitter_java as tsjava

@@ -1,11 +1,11 @@
-"""Tests for the graph analysis tools (previously tested via pipeline.py)."""
+"""Tests for the graph analysis tools."""
 
 import json
 from pathlib import Path
 
-from localize_agent.graph.tools import run_treesitter, run_structural_metrics
+from agent.tools import run_treesitter, run_structural_metrics
 
-SAMPLE = Path(__file__).resolve().parents[1] / "src/localize_agent/test_inputs/test_input.java"
+SAMPLE = Path(__file__).resolve().parent / "fixtures/test_input.java"
 
 
 def test_run_treesitter_extracts_facts():

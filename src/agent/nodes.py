@@ -8,17 +8,17 @@ from typing import Any
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langgraph.prebuilt import create_react_agent
 
-from localize_agent.analyzers.correlator import build_analysis_evidence
-from localize_agent.graph.llm import get_llm
-from localize_agent.graph.state import AnalysisState, LocalizationOutput, RankedResult
-from localize_agent.graph.tools import EVIDENCE_TOOLS, correlate_evidence
-from localize_agent.models import RefactoringTarget
-from localize_agent.tools.code_analysis import (
+from utils.correlator import build_analysis_evidence
+from agent.llm import get_llm
+from agent.state import AnalysisState, LocalizationOutput, RankedResult
+from agent.tools import EVIDENCE_TOOLS, correlate_evidence
+from models import RefactoringTarget
+from utils.structural import (
     merge_fan_metrics_into_code_facts,
     run_structural_analysis,
 )
-from localize_agent.analyzers.pmd import PmdAnalyzer, PmdNotAvailableError
-from localize_agent.analyzers.treesitter_java import JavaTreeSitterAnalyzer
+from utils.pmd import PmdAnalyzer, PmdNotAvailableError
+from utils.treesitter import JavaTreeSitterAnalyzer
 
 
 def _message_text(messages: list[Any]) -> str:

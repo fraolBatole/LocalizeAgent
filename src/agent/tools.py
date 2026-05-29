@@ -7,11 +7,11 @@ from pathlib import Path
 
 from langchain_core.tools import tool
 
-from localize_agent.analyzers.correlator import build_analysis_evidence
-from localize_agent.analyzers.pmd import PmdAnalyzer, PmdNotAvailableError
-from localize_agent.analyzers.treesitter_java import JavaTreeSitterAnalyzer
-from localize_agent.models import CodeFact, PmdFinding, StructuralAnalysis
-from localize_agent.tools.code_analysis import run_structural_analysis
+from utils.correlator import build_analysis_evidence
+from utils.pmd import PmdAnalyzer, PmdNotAvailableError
+from utils.treesitter import JavaTreeSitterAnalyzer
+from models import CodeFact, PmdFinding, StructuralAnalysis
+from utils.structural import run_structural_analysis
 
 
 @tool

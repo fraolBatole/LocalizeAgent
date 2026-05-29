@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from localize_agent.analyzers.treesitter_java import JavaTreeSitterAnalyzer
-from localize_agent.tools.code_analysis import merge_fan_metrics_into_code_facts, run_structural_analysis
+from utils.treesitter import JavaTreeSitterAnalyzer
+from utils.structural import merge_fan_metrics_into_code_facts, run_structural_analysis
 
-SAMPLE = Path(__file__).resolve().parents[1] / "src/localize_agent/test_inputs/test_input.java"
+SAMPLE = Path(__file__).resolve().parent / "fixtures/test_input.java"
 
 
 def test_analyze_test_input_file():

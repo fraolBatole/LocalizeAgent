@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from localize_agent.models import (
+from models import (
     AnalysisEvidence,
     ClassFact,
     CodeFact,
